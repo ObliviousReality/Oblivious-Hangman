@@ -19,6 +19,7 @@ String chooseWord() {
     String word = "";
     while(word.length() <= MINWORDLENGTH) {
         word = wordList.getString(int(random(0, length)));
+        // word = wordList.getString(213);
     }
     return word;
 }
@@ -29,7 +30,12 @@ void startGame() {
     lettersGuessed = new boolean[26];
     guessedWord = new char[wordLength];
     for (int i = 0; i < wordLength; i++) {
-        guessedWord[i] = ' ';
+        if ((word.charAt(i) == '-') || (word.charAt(i) == ' ')) {
+            guessedWord[i] = word.charAt(i);
+        }
+        else {
+            guessedWord[i] = ' ';
+        }
     }
     println(word);
 }
@@ -52,6 +58,9 @@ void guess(char c) {
 
 void setup() {
     size(1200, 800);
+    PFont epicFont;
+    epicFont = createFont("Comic Sans MS", 32);
+    textFont(epicFont);
     startGame();
 }
 
@@ -64,7 +73,9 @@ void draw() {
     int leftPixelPoint = (WIDTH - pixelWordLength) / 2;
     for (int i = 0; i < wordLength; i++) {
         text(guessedWord[i], leftPixelPoint + 30, 200);
-        line(leftPixelPoint, 210, leftPixelPoint + 60, 210);
+        if (word.charAt(i) != ' ' && word.charAt(i) != '-') {
+            line(leftPixelPoint, 210, leftPixelPoint + 60, 210);
+        }
         leftPixelPoint += 80;
     }
     // text(new String(guessedWord), 400, 200);
