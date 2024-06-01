@@ -3,7 +3,7 @@ int HEIGHT = 800;
 
 int MINWORDLENGTH = 5;
 
-int DEATHAT = 12;
+int DEATHAT = 11;
 
 String word = "";
 int wordLength = 0;
@@ -17,6 +17,8 @@ int leftPixelPoint = 0;
 int deathCounter = 0;
 
 PImage[] deathImages = new PImage[12];
+
+boolean endGame = false;
 
 void loadDeathImages() {
     for (int i = 0; i < 12; i++) {
@@ -36,6 +38,12 @@ String chooseWord() {
     return word;
 }
 
+void revealWord() {
+    for (int i = 0; i < wordLength; i++) {
+        guessedWord[i] = word.charAt(i);
+    }
+}
+
 void startGame() {
     word = chooseWord();
     wordLength = word.length();
@@ -51,6 +59,13 @@ void startGame() {
         }
     }
     println(word);
+}
+
+void endGame() {
+    deathCounter = 12;
+    endGame = true;
+    revealWord();
+    loop();
 }
 
 void guess(char c) {
@@ -71,6 +86,7 @@ void guess(char c) {
         deathCounter++;
         if (deathCounter >= DEATHAT) {
             deathCounter = DEATHAT;
+            endGame();
         }
     }
 }
@@ -103,9 +119,7 @@ void draw() {
     stroke(255, 255, 255);
 
     for (int i = 0; i < deathCounter; i++) {
-        pushMatrix();
-        image(deathImages[i], 350, 250);
-        popMatrix();
+        image(deathImages[i], 300, 250);
     }
 
     int pixelCharLength = 26 * 20;
@@ -118,9 +132,25 @@ void draw() {
         line(xPos - 8, 710, xPos + 8, 710);
         xPos += 20;
     }
+
+    if (endGame) {
+        textSize(100);
+        text("Word Was: ", 600, 100);
+        fill(255,0,0);
+        textSize(200);
+        text("You      Died!", 600, 400);
+        textSize(100);
+        text("Press Any Key to Restart", 600, 650);
+        fill(255);
+    }
 }
 
 void keyPressed() {
+    if (endGame) {
+        endGame = false;
+        startGame();
+        return;
+    }
     int k = int(key);
     if (key == '1') {
         startGame();
@@ -128,7 +158,7 @@ void keyPressed() {
     else if (k >= 97 && k <= 122) {
         guess(key);
     }
-    else if (k >= 65 && k <= 91) {
+    else if (k >= 65 && k <= 90) {
         guess(char(int(key) + 32));
     }
     loop();
