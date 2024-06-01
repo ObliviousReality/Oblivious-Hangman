@@ -26,9 +26,7 @@ boolean atEndGame = false;
 
 void loadDeathImages() {
     for (int i = 0; i < 12; i++) {
-        // To run in Processing swap these lines:
         deathImages[i] = loadImage("lib/Code/ObliviousHangman/imgs/" + (i + 1) + ".png");
-        // deathImages[i] = loadImage("./imgs/" + (i + 1) + ".png");
     }
 }
 
@@ -77,8 +75,6 @@ void guess(char c) {
     lettersGuessed[int(c) - 97] = true;
     if (word.indexOf(c) > - 1) {
         for (int i = 0; i < wordLength; i++) {
-            // To run in Processing swap these lines:
-            // if (word.charAt(i) == c) {
             if (String(word.charAt(i)) == String(c)) {
                 guessedWord[i] = c;
                 numLettersGuessed++;
