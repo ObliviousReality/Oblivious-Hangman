@@ -1,11 +1,16 @@
+int WIDTH = 1200;
+int HEIGHT = 800;
+
 int MINWORDLENGTH = 5;
 
 String word = "";
 int wordLength = 0;
 
-String guessedWord = "";
+char[] guessedWord;
 
 boolean[] lettersGuessed = new boolean[26];
+
+int leftPixelPoint = 0;
 
 String chooseWord() {
     JSONObject file = loadJSONObject("words.json");
@@ -22,31 +27,56 @@ void startGame() {
     word = chooseWord();
     wordLength = word.length();
     lettersGuessed = new boolean[26];
-    guessedWord = "";
+    guessedWord = new char[wordLength];
+    for (int i = 0; i < wordLength; i++) {
+        guessedWord[i] = ' ';
+    }
     println(word);
 }
 
 void guess(char c) {
+    if (lettersGuessed[int(c) - 97]) {
+        return;
+    }
     print("YOU GUESSED: ");
     println(c);
     lettersGuessed[int(c) - 97] = true;
+    if (word.indexOf(c) > - 1) {
+        for (int i = 0; i < wordLength; i++) {
+            if (word.charAt(i) == c) {
+                guessedWord[i] = c;
+            }
+        }
+    }
 }
 
 void setup() {
-    size(800, 800);
+    size(1200, 800);
     startGame();
 }
 
 
 void draw() {
     background(18);
+    textSize(100);
+    textAlign(CENTER);
+    int pixelWordLength = wordLength * 80;
+    int leftPixelPoint = (WIDTH - pixelWordLength) / 2;
+    for (int i = 0; i < wordLength; i++) {
+        text(guessedWord[i], leftPixelPoint + 30, 200);
+        line(leftPixelPoint, 210, leftPixelPoint + 60, 210);
+        leftPixelPoint += 80;
+    }
+    // text(new String(guessedWord), 400, 200);
+    stroke(255, 255, 255);
+    int pixelCharLength = 26 * 20;
+    int xPos = (WIDTH - pixelCharLength) / 2;
     textSize(20);
-    text(word, 100, 100);
-    int xPos = 100;
     for (int i = 0; i < 26; i++) {
         if (lettersGuessed[i]) {
-            text(char(97 + i), xPos, 200);
+            text(char(97 + i), xPos, 700);
         }
+        line(xPos - 8, 710, xPos + 8, 710);
         xPos += 20;
     }
 }
