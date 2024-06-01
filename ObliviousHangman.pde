@@ -55,6 +55,7 @@ void startGame() {
     for (int i = 0; i < wordLength; i++) {
         if ((word.charAt(i) == '-') || (word.charAt(i) == ' ')) {
             guessedWord[i] = word.charAt(i);
+            numLettersGuessed++;
         }
         else {
             guessedWord[i] = ' ';
