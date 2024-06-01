@@ -78,8 +78,8 @@ void guess(char c) {
     if (word.indexOf(c) > - 1) {
         for (int i = 0; i < wordLength; i++) {
             // To run in Processing swap these lines:
-            if (word.charAt(i) == c) {
-            // if (String(word.charAt(i)) == String(c)) {
+            // if (word.charAt(i) == c) {
+            if (String(word.charAt(i)) == String(c)) {
                 guessedWord[i] = c;
                 numLettersGuessed++;
                 if (numLettersGuessed == wordLength) {
