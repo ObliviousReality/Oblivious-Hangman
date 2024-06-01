@@ -3,6 +3,8 @@ int HEIGHT = 800;
 
 int MINWORDLENGTH = 5;
 
+int DEATHAT = 12;
+
 String word = "";
 int wordLength = 0;
 
@@ -11,6 +13,16 @@ char[] guessedWord;
 boolean[] lettersGuessed = new boolean[26];
 
 int leftPixelPoint = 0;
+
+int deathCounter = 0;
+
+PImage[] deathImages = new PImage[12];
+
+void loadDeathImages() {
+    for (int i = 0; i < 12; i++) {
+        deathImages[i] = loadImage("imgs/" + Integer.toString(i + 1) + ".png");
+    }
+}
 
 String chooseWord() {
     JSONObject file = loadJSONObject("words.json");
@@ -29,6 +41,7 @@ void startGame() {
     wordLength = word.length();
     lettersGuessed = new boolean[26];
     guessedWord = new char[wordLength];
+    deathCounter = 0;
     for (int i = 0; i < wordLength; i++) {
         if ((word.charAt(i) == '-') || (word.charAt(i) == ' ')) {
             guessedWord[i] = word.charAt(i);
@@ -54,6 +67,12 @@ void guess(char c) {
             }
         }
     }
+    else {
+        deathCounter++;
+        if (deathCounter >= DEATHAT) {
+            deathCounter = DEATHAT;
+        }
+    }
 }
 
 void setup() {
@@ -61,6 +80,9 @@ void setup() {
     PFont epicFont;
     epicFont = createFont("Comic Sans MS", 32);
     textFont(epicFont);
+    loadDeathImages();
+    noLoop();
+    loop();
     startGame();
 }
 
@@ -78,8 +100,14 @@ void draw() {
         }
         leftPixelPoint += 80;
     }
-    // text(new String(guessedWord), 400, 200);
     stroke(255, 255, 255);
+
+    for (int i = 0; i < deathCounter; i++) {
+        pushMatrix();
+        image(deathImages[i], 350, 250);
+        popMatrix();
+    }
+
     int pixelCharLength = 26 * 20;
     int xPos = (WIDTH - pixelCharLength) / 2;
     textSize(20);
@@ -103,4 +131,5 @@ void keyPressed() {
     else if (k >= 65 && k <= 91) {
         guess(char(int(key) + 32));
     }
+    loop();
 }
