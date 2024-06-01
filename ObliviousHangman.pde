@@ -12,6 +12,8 @@ char[] guessedWord;
 
 boolean[] lettersGuessed = new boolean[26];
 
+int numLettersGuessed = 0;
+
 int leftPixelPoint = 0;
 
 int deathCounter = 0;
@@ -33,7 +35,6 @@ String chooseWord() {
     String word = "";
     while(word.length() <= MINWORDLENGTH) {
         word = wordList.getString(int(random(0, length)));
-        // word = wordList.getString(213);
     }
     return word;
 }
@@ -49,6 +50,7 @@ void startGame() {
     wordLength = word.length();
     lettersGuessed = new boolean[26];
     guessedWord = new char[wordLength];
+    numLettersGuessed = 0;
     deathCounter = 0;
     for (int i = 0; i < wordLength; i++) {
         if ((word.charAt(i) == '-') || (word.charAt(i) == ' ')) {
@@ -58,11 +60,9 @@ void startGame() {
             guessedWord[i] = ' ';
         }
     }
-    println(word);
 }
 
 void endGame() {
-    deathCounter = 12;
     endGame = true;
     revealWord();
     loop();
@@ -72,20 +72,22 @@ void guess(char c) {
     if (lettersGuessed[int(c) - 97]) {
         return;
     }
-    print("YOU GUESSED: ");
-    println(c);
     lettersGuessed[int(c) - 97] = true;
     if (word.indexOf(c) > - 1) {
         for (int i = 0; i < wordLength; i++) {
             if (word.charAt(i) == c) {
                 guessedWord[i] = c;
+                numLettersGuessed++;
+                if (numLettersGuessed == wordLength) {
+                    endGame();
+                }
             }
         }
     }
     else {
         deathCounter++;
         if (deathCounter >= DEATHAT) {
-            deathCounter = DEATHAT;
+            deathCounter = 12;
             endGame();
         }
     }
@@ -136,9 +138,17 @@ void draw() {
     if (endGame) {
         textSize(100);
         text("Word Was: ", 600, 100);
-        fill(255,0,0);
         textSize(200);
-        text("You      Died!", 600, 400);
+        String endText = "";
+        if (deathCounter == 12) {
+            fill(255,0,0);
+            endText = "You      Died!";
+        }
+        else {
+            fill(107, 22, 162);
+            endText = "You       Won!";
+        }
+        text(endText, 600, 400);
         textSize(100);
         text("Press Any Key to Restart", 600, 650);
         fill(255);
